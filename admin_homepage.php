@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// If not set
+if (!isset($_SESSION['user_id'])) {
+  header('Location: index.php');
+  exit();
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,16 +21,16 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
           <a class="navbar-brand" href="#">Library Management System (Admin)</a>
-          <a class="btn btn-outline-light ms-auto" href="add_authors.html">Add Authors</a>
-          <a class="btn btn-outline-light ms-2" href="add_genres.html">Add Genres</a>
-          <a class="btn btn-outline-light ms-2" href="add_books.html">Add Books</a>
+          <a class="btn btn-outline-light ms-auto" href="add_authors.php">Add Authors</a>
+          <a class="btn btn-outline-light ms-2" href="add_genres.php">Add Genres</a>
+          <a class="btn btn-outline-light ms-2" href="add_books.php">Add Books</a>
           <div class="dropdown ms-2">
             <button class="btn btn-outline-light dropdown-toggle" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="bi bi-person-circle"></i> <!-- Bootstrap icon -->
             </button>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
               <li>
-                  <a class="dropdown-item" href="profile.html">
+                  <a class="dropdown-item" href="profile.php">
                       <i class="bi bi-person-circle me-2"></i> See Profile Information
                   </a>
                 </li>
@@ -35,9 +45,9 @@
                 </button>
               </li>
               <li>
-                <button class="dropdown-item text-danger" onclick="logout()">
+                <a class="dropdown-item text-danger" href="logout.php">
                   <i class="bi bi-box-arrow-right me-2"></i> Logout
-                </button>
+                </a>
               </li>
             </ul>
           </div>
