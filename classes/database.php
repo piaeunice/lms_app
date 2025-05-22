@@ -71,6 +71,77 @@ class database{
         }
  
     }
+
+    function loginUser($email, $password) {
+        $con = $this->opencon();
+        $stmt = $con->prepare("SELECT * FROM Users WHERE user_email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user && password_verify($password, $user['user_password'])) {
+            return $user;
+        } else {
+            return false;
+        }
+    }
+
+    function addAuthor($authorfirstname, $authorlastname, $authorbirthyear, $authornationality) {
+    $con = $this->opencon();
+    try {
+        $con->beginTransaction();
+
+        $stmt = $con->prepare("INSERT INTO authors (author_FN, author_LN, author_birthday, author_nat) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$authorfirstname, $authorlastname, $authorbirthyear, $authornationality]);
+
+        $authorID = $con->lastInsertId();
+
+        $con->commit();
+        return $authorID;
+
+        } catch (PDOException $e) {
+            $con->rollback();
+            return false;
+        }
+    }
+
+
+    function addGenre($genrename) {
+        $con = $this->opencon();
+        try {
+            $con->beginTransaction();
+
+            $stmt = $con->prepare("INSERT INTO genres (genre_name) VALUES (?)");
+            $stmt->execute([$genrename]);
+
+            $genreID = $con->lastInsertId();
+
+            $con->commit();
+            return $genreID;
+        } catch (PDOException $e) {
+            $con->rollback();
+            return false;
+        }
+    }
+
+    function addBook($booktitle, $bookisbn, $bookpubyear, $quantity) {
+    $con = $this->opencon();
+    try {
+        $con->beginTransaction();
+
+        // Fixed syntax error: replaced "?." with "," in the SQL
+        $stmt = $con->prepare("INSERT INTO books (book_title, book_isbn, book_pubyear, quantity_avail) VALUES (?, ?, ?, ?)");
+        $stmt->execute([$booktitle, $bookisbn, $bookpubyear, $quantity]);
+
+        $bookID = $con->lastInsertId();
+
+        $con->commit();
+        return $bookID;
+    } catch (PDOException $e) {
+        $con->rollBack();
+        return false;
+    }
+}
+
  
  
 }
