@@ -1,3 +1,13 @@
+<?php
+session_start();
+
+// If not set
+if (!isset($_SESSION['user_id'])) {
+  header('Location: index.php');
+  exit();
+}
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -33,9 +43,9 @@
           </button>
         </li>
         <li>
-          <button class="dropdown-item text-danger" onclick="logout()">
+          <a class="dropdown-item text-danger" href="logout.php">
             <i class="bi bi-box-arrow-right me-2"></i> Logout
-          </button>
+          </a>
         </li>
       </ul>
     </div>
