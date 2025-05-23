@@ -123,24 +123,29 @@ class database{
         }
     }
 
-    function addBook($booktitle, $bookisbn, $bookpubyear, $quantity) {
-    $con = $this->opencon();
-    try {
-        $con->beginTransaction();
+    function addBook($bookTitle, $bookISBN, $bookYear, $bookGenres, $bookQuantity) {
+            $con = $this->opencon();
 
-        // Fixed syntax error: replaced "?." with "," in the SQL
-        $stmt = $con->prepare("INSERT INTO books (book_title, book_isbn, book_pubyear, quantity_avail) VALUES (?, ?, ?, ?)");
-        $stmt->execute([$booktitle, $bookisbn, $bookpubyear, $quantity]);
+            try {
+                $con->beginTransaction();
 
-        $bookID = $con->lastInsertId();
+                $stmt = $con->prepare("INSERT INTO Books (book_title, book_isbn, book_pubyear, quantity_avail) VALUES (?, ?, ?, ?)");
+                $stmt->execute([$bookTitle, $bookISBN, $bookYear, $bookQuantity]);
 
-        $con->commit();
-        return $bookID;
-    } catch (PDOException $e) {
-        $con->rollBack();
-        return false;
-    }
-}
+                $book_id = $con->lastInsertId();
+
+                foreach ($bookGenres as $genre_id) {
+                    $stmt = $con->prepare("INSERT INTO Books_Genres (book_id, genre_id) VALUES (?, ?)");
+                    $stmt->execute([$book_id, $genre_id]);
+                }
+
+                $con->commit();
+                return true;
+            } catch (PDOException $e) {
+                $con->rollBack();
+                return false;
+            }
+        }
 
  
  

@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
           text: 'An author has been successfully added.',
           confirmButtonText: 'OK'
         }).then(() => {
-          window.location.href = 'admin_homepage.php';
+          window.location.href = 'add_authors.php';
         });
       });
     </script>";
