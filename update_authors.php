@@ -31,7 +31,7 @@ if (isset($_POST['updateAuthor'])) {
                   text: 'An author has been successfully updated.',
                   confirmButtonText: 'OK'
                 }).then(() => {
-                  window.location.href = 'add_authors.php';
+                  window.location.href = 'admin_homepage.php';
                 });
               });
             </script>";
@@ -47,33 +47,8 @@ if (isset($_POST['updateAuthor'])) {
                 });
               });
             </script>";
-}
-
-    $sweetAlertConfig = $result ? "
-        <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-              icon: 'success',
-              title: 'Author Updated Successfully',
-              text: 'An author has been successfully updated.',
-              confirmButtonText: 'OK'
-            }).then(() => {
-              window.location.href = 'admin_homepage.php';
-            });
-          });
-        </script>" : "
-        <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'An error occurred while updating author. Please try again.',
-              confirmButtonText: 'OK'
-            });
-          });
-        </script>";
-}
-
+      }
+    }
 
 ?>
 

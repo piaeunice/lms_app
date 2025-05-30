@@ -1,29 +1,40 @@
 <?php
 
-require_once 'classes/database.php';
+  session_start();
+  
+if (empty($_SESSION['user_id'])) {
+  header('Location: login.php');
+  exit();
+}
+
+  require_once 'classes/database.php';
 
 $con = new database();
 $sweetAlertConfig = "";
+
+$genres = $con->viewGenres();
+$authors = $con->viewAuthors();
 
 if (isset($_POST['addBooks'])) {
     $bookTitle = $_POST['bookTitle'];
     $bookISBN = $_POST['bookISBN'];
     $bookYear = $_POST['bookYear'];
-    $bookGenres = $_POST['bookGenres'];
     $bookQuantity = $_POST['bookQuantity'];
+    $genre_ids = isset($_POST['bookGenres']) ? $_POST['bookGenres'] : [];
+    $author_ids = isset($_POST['bookAuthors']) ? $_POST['bookAuthors'] : [];
 
-    $result = $con->addBook($bookTitle, $bookISBN, $bookYear, $bookGenres, $bookQuantity);
+    $result = $con->addBook($bookTitle, $bookISBN, $bookYear, $bookQuantity, $genre_ids, $author_ids);
 
     if ($result) {
         $sweetAlertConfig = "
           <script>
             Swal.fire({
               icon: 'success',
-              title: 'Book Added Successfully!',
-              text: 'A book has been successfully added.',
+              title: 'Book added successfully',
+              text: 'A new book has been added to the library.',
               confirmButtonText: 'Continue'
             }).then(() => {
-              window.location.href = 'add_books.php';
+              window.location.href = 'admin_homepage.php';
             });
           </script>";
     } else {
@@ -31,8 +42,8 @@ if (isset($_POST['addBooks'])) {
           <script>
             Swal.fire({
               icon: 'error',
-              title: 'Error',
-              text: 'Failed to add book.',
+              title: 'Something went wrong',
+              text: 'Please try again.',
             });
           </script>";
     }
@@ -104,17 +115,25 @@ if (isset($_POST['addBooks'])) {
     </div>
     <div class="mb-3">
       <label for="bookGenres" class="form-label">Genres</label>
-      <select class="form-select" name="bookGenres" id="bookGenres" multiple required>
-        <option value="Fiction">Fiction</option>
-        <option value="Non-Fiction">Non-Fiction</option>
-        <option value="Science">Science</option>
-        <option value="History">History</option>
-        <option value="Biography">Biography</option>
-        <option value="Fantasy">Fantasy</option>
-        <option value="Mystery">Mystery</option>
+      <select class="form-select" name="bookGenres[]" id="bookGenres" multiple required>
+        <?php foreach ($genres as $genre): ?>
+          <option value="<?php echo $genre['genre_id'] ?>"><?php echo htmlspecialchars($genre['genre_name']); ?></option>
+        <?php endforeach; ?>
+        
         <!-- Add more genres as needed -->
       </select>
       <small class="form-text text-muted">Hold down the Ctrl (Windows) or Command (Mac) key to select multiple genres.</small>
+    </div>
+    <div class="mb-3">
+      <label for="bookAuthors" class="form-label">Authors</label>
+      <select class="form-select" name="bookAuthors[]" id="bookAuthors" multiple required>
+        <?php foreach ($authors as $author): ?>
+          <option value="<?php echo $author['author_id'] ?>"><?php echo htmlspecialchars($author['author_FN'] . ' ' . $author['author_LN']); ?></option>
+        <?php endforeach; ?>
+        
+        <!-- Add more genres as needed -->
+      </select>
+      <small class="form-text text-muted">Hold down the Ctrl (Windows) or Command (Mac) key to select multiple authors.</small>
     </div>
     <div class="mb-3">
       <label for="bookQuantity" class="form-label">Quantity Available</label>

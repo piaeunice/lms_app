@@ -28,7 +28,7 @@ if (isset($_POST['updateGenre'])) {
                   text: 'A genre has been successfully updated.',
                   confirmButtonText: 'OK'
                 }).then(() => {
-                  window.location.href = 'update_authors.php?id={$id}';
+                  window.location.href = 'admin_homepage.php';
                 });
               });
             </script>";
@@ -44,34 +44,9 @@ if (isset($_POST['updateGenre'])) {
                 });
               });
             </script>";
-}
-
-    $sweetAlertConfig = $result ? "
-        <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-              icon: 'success',
-              title: 'Genre Updated Successfully',
-              text: 'A genre has been successfully updated.',
-              confirmButtonText: 'OK'
-            }).then(() => {
-              window.location.href = 'admin_homepage.php';
-            });
-          });
-        </script>" : "
-        <script>
-          document.addEventListener('DOMContentLoaded', function () {
-            Swal.fire({
-              icon: 'error',
-              title: 'Oops...',
-              text: 'An error occurred while updating genre. Please try again.',
-              confirmButtonText: 'OK'
-            });
-          });
-        </script>";
-}
-
-
+      }
+    }
+    
 ?>
 
 <!doctype html>

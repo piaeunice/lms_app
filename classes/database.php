@@ -154,7 +154,7 @@ class database{
         }
     }
 
-    function viewGenre()
+    function viewGenres()
         {
             $con = $this->opencon();
             return $con->query("SELECT * FROM Genres ORDER BY genre_id")->fetchAll();
@@ -183,21 +183,34 @@ class database{
         }
     }
 
-    // Books
-    function addBook($bookTitle, $bookISBN, $bookYear, $bookGenres, $bookQuantity) {
+    // Function for adding and viewing books
+    function addBook($bookTitle, $bookISBN, $bookYear, $bookQuantity, $genre_ids = [], $author_ids = []) {
             $con = $this->opencon();
 
             try {
                 $con->beginTransaction();
 
+                // Inserting into Books table
                 $stmt = $con->prepare("INSERT INTO Books (book_title, book_isbn, book_pubyear, quantity_avail) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$bookTitle, $bookISBN, $bookYear, $bookQuantity]);
-
                 $book_id = $con->lastInsertId();
 
-                foreach ($bookGenres as $genre_id) {
-                    $stmt = $con->prepare("INSERT INTO Books_Genres (book_id, genre_id) VALUES (?, ?)");
-                    $stmt->execute([$book_id, $genre_id]);
+                // Inserting into Genre_Books tables
+                foreach ($genre_ids as $genre_id) {
+                    $stmt = $con->prepare("INSERT INTO Genre_Books (genre_id, book_id) VALUES (?, ?)");
+                    $stmt->execute([$genre_id, $book_id]);
+                }
+
+                // Inserting into Book_Authors tables
+                foreach ($author_ids as $author_id) {
+                    $stmt = $con->prepare("INSERT INTO Book_Authors (book_id, author_id) VALUES (?, ?)");
+                    $stmt->execute([$book_id, $author_id]);
+                }
+
+                // Inserting into Book_Copies table
+                for ($i = 0; $i < $bookQuantity; $i++) {
+                    $stmt = $con->prepare("INSERT INTO Book_Copy (book_id, is_available) VALUES (?, 1)");
+                    $stmt->execute([$book_id]);
                 }
 
                 $con->commit();
@@ -207,6 +220,13 @@ class database{
                 return false;
             }
         }
+
+    function viewBooks()
+    {
+        $con = $this->opencon();
+        return $con->query("SELECT * FROM Books ORDER BY book_id")->fetchAll();
+    }
+
 
  
  

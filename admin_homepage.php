@@ -192,7 +192,7 @@ if (!isset($_SESSION['user_id'])) {
 
             <tbody>
                 <?php
-                $data = $con->viewGenre();
+                $data = $con->viewGenres();
                 foreach ($data as $rows) {
                 ?>
 
@@ -248,13 +248,20 @@ if (!isset($_SESSION['user_id'])) {
                 <th>Actions</th>
               </tr>
             </thead>
+
             <tbody>
+              
+              <?php
+              $data = $con->viewBooks();
+              foreach ($data as $rows) {
+              ?>
+
               <tr>
-                <td>1</td>
-                <td>The Adventures of Tom Sawyer</td>
-                <td>978-0-123456-47-2</td>
-                <td>1876</td>
-                <td>5</td>
+                <td><?php echo $rows['book_id']?></td>
+                <td><?php echo $rows['book_title']?></td>
+                <td><?php echo $rows['book_isbn']?></td>
+                <td><?php echo $rows['book_pubyear']?></td>
+                <td><?php echo $rows['quantity_avail']?></td>
                 <td>
                   <button type="submit" class="btn btn-warning btn-sm">
                     <i class="bi bi-pencil-square"></i>
@@ -264,36 +271,12 @@ if (!isset($_SESSION['user_id'])) {
                   </button>
                 </td>
               </tr>
-              <tr>
-                <td>2</td>
-                <td>Pride and Prejudice</td>
-                <td>978-0-123456-48-9</td>
-                <td>1813</td>
-                <td>3</td>
-                <td>
-                  <button type="submit" class="btn btn-warning btn-sm">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button type="submit" name="delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?')">
-                    <i class="bi bi-x-square"></i>
-                  </button>
-                </td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Dune</td>
-                <td>978-0-123456-49-6</td>
-                <td>1965</td>
-                <td>7</td>
-                <td>
-                  <button type="submit" class="btn btn-warning btn-sm">
-                    <i class="bi bi-pencil-square"></i>
-                  </button>
-                  <button type="submit" name="delete" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this book?')">
-                    <i class="bi bi-x-square"></i>
-                  </button>
-                </td>
-              </tr>
+              <?php
+              }
+              ?>
+
+          
+
             </tbody>
           </table>
         </div>
